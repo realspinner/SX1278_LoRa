@@ -1,5 +1,5 @@
-#ifndef __SX1278_H__
-#define __SX1278_H__
+#ifndef __SX1278_BASE_H__
+#define __SX1278_BASE_H__
 
 #include <stdint.h>
 #include <stdbool.h>
@@ -8,31 +8,32 @@
 #define SX1278_DEFAULT_TIMEOUT		3000
 
 //Error Coding rate (CR)setting
-#define CR_4_5
-//#define CR_4_6
-//#define CR_4_7
-//#define CR_4_8
-#ifdef   CR_4_5
-	#define CR	0x01
+#define SX1278_CR_4_5
+//#define SX1278_CR_4_6
+//#define SX1278_CR_4_7
+//#define SX1278_CR_4_8
+#ifdef   SX1278_CR_4_5
+	#define SX1278_CR	0x01
 #else
-	#ifdef   CR_4_6
-		#define CR    0x02
+	#ifdef   SX1278_CR_4_6
+		#define SX1278_CR    0x02
 	#else
-		#ifdef   CR_4_7
-			#define CR    0x03
+		#ifdef   SX1278_CR_4_7
+			#define SX1278_CR    0x03
 		#else
-			#ifdef   CR_4_8
-				#define CR    0x04
+			#ifdef   SX1278_CR_4_8
+				#define SX1278_CR    0x04
 			#endif
 		#endif
 	#endif
 #endif
+
 //CRC Enable
-#define CRC_EN
-#ifdef  CRC_EN
-  #define CRC   0x01
+#define SX1278_CRC_EN
+#ifdef  SX1278_CRC_EN
+  #define SX1278_CRC   0x01
 #else
-  #define CRC   0x00
+  #define SX1278_CRC   0x00
 #endif
 //RFM98 Internal registers Address
 /********************LoRa mode***************************/
@@ -250,7 +251,7 @@ protected:
 	virtual void HAL_Reset() = 0;
 	virtual void HAL_SPICommand(uint8_t cmd) = 0;
 	virtual uint8_t HAL_SPIReadByte() = 0;
-	virtual void HAL_Delay(uint32_t msec) = 0;
+	virtual void HAL_DelayMs(uint32_t msec) = 0;
 	virtual bool HAL_GetDIO0() = 0;
 
 	uint8_t rxBuffer[SX1278_MAX_PACKET];

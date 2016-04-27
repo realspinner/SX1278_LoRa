@@ -1,4 +1,4 @@
-#include "SX1278.h"
+#include "SX1278_Base.h"
 #include <string.h>
 
 uint8_t SX1278_Base::SPIRead(uint8_t addr) {
@@ -50,7 +50,7 @@ void SX1278_Base::defaultConfig(){
 
 void SX1278_Base::config(uint8_t frequency, uint8_t power, uint8_t LoRa_Rate, uint8_t LoRa_BW) {
 	  this->sleep(); //Change modem mode Must in Sleep mode
-	  this->HAL_Delay(15);
+	  this->HAL_DelayMs(15);
 
 	  this->entryLoRa();
 	  //SPIWrite(0x5904); //?? Change digital regulator form 1.6V to 1.47V: see errata note
@@ -66,11 +66,11 @@ void SX1278_Base::config(uint8_t frequency, uint8_t power, uint8_t LoRa_Rate, ui
 		  uint8_t tmp;
 		  this->SPIWrite(
 				  LR_RegModemConfig1,
-				  ((SX1278_LoRaBandwidth[LoRa_BW] << 4) + (CR << 1) + 0x01 )); //Implicit Enable CRC Enable(0x02) & Error Coding rate 4/5(0x01), 4/6(0x02), 4/7(0x03), 4/8(0x04)
+				  ((SX1278_LoRaBandwidth[LoRa_BW] << 4) + (SX1278_CR << 1) + 0x01 )); //Implicit Enable CRC Enable(0x02) & Error Coding rate 4/5(0x01), 4/6(0x02), 4/7(0x03), 4/8(0x04)
 
 		  this->SPIWrite(
 				  LR_RegModemConfig2,
-				  ((SX1278_SpreadFactor[LoRa_Rate] << 4) + (CRC << 2)  + 0x03));
+				  ((SX1278_SpreadFactor[LoRa_Rate] << 4) + (SX1278_CRC << 2)  + 0x03));
 
 		  tmp = this->SPIRead(0x31);
 		  tmp &= 0xF8;
@@ -80,11 +80,11 @@ void SX1278_Base::config(uint8_t frequency, uint8_t power, uint8_t LoRa_Rate, ui
 	  } else {
 		  this->SPIWrite(
 				  LR_RegModemConfig1,
-				  ((SX1278_LoRaBandwidth[LoRa_BW] << 4) + (CR << 1) + 0x00));	//Explicit Enable CRC Enable(0x02) & Error Coding rate 4/5(0x01), 4/6(0x02), 4/7(0x03), 4/8(0x04)
+				  ((SX1278_LoRaBandwidth[LoRa_BW] << 4) + (SX1278_CR << 1) + 0x00));	//Explicit Enable CRC Enable(0x02) & Error Coding rate 4/5(0x01), 4/6(0x02), 4/7(0x03), 4/8(0x04)
 
 		  this->SPIWrite(
 				  LR_RegModemConfig2,
-				  ((SX1278_SpreadFactor[LoRa_Rate] << 4) + (CRC << 2) + 0x03));  //SFactor &  LNA gain set by the internal AGC loop
+				  ((SX1278_SpreadFactor[LoRa_Rate] << 4) + (SX1278_CRC << 2) + 0x03));  //SFactor &  LNA gain set by the internal AGC loop
 	  }
 
 	  this->SPIWrite(LR_RegSymbTimeoutLsb, 0xFF); //RegSymbTimeoutLsb Timeout = 0x3FF(Max)
@@ -139,7 +139,7 @@ bool SX1278_Base::LoRaEntryRx(uint8_t length, uint32_t timeout) {
 			  this->defaultConfig();
 			  return false;
 		  }
-		  this->HAL_Delay(1);
+		  this->HAL_DelayMs(1);
 	  }
 }
 
@@ -211,7 +211,7 @@ bool SX1278_Base::LoRaTxPacket(uint8_t* txBuffer, uint8_t length, uint32_t timeo
 	    	this->defaultConfig();
 	    	return false;
 	    }
-	    this->HAL_Delay(1);
+	    this->HAL_DelayMs(1);
 	  }
 }
 

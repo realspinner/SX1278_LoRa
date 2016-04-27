@@ -51,7 +51,7 @@ uint8_t SX1278::HAL_SPIReadByte() {
 	return SPI.transfer(0x00);
 }
 
-void SX1278::HAL_Delay(uint32_t msec) {
+void SX1278::HAL_DelayMs(uint32_t msec) {
 	delay(msec);
 }
 

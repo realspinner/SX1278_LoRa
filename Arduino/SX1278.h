@@ -24,7 +24,7 @@ protected:
 	void HAL_Reset();
 	void HAL_SPICommand(uint8_t cmd);
 	uint8_t HAL_SPIReadByte();
-	void HAL_Delay(uint32_t msec);
+	void HAL_DelayMs(uint32_t msec);
 	bool HAL_GetDIO0();
 
 	void SPIBurstRead(uint8_t addr, uint8_t *rxBuf, uint8_t length);

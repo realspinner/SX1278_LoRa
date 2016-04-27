@@ -95,14 +95,6 @@ void SX1278_Base::config(uint8_t frequency, uint8_t power, uint8_t LoRa_Rate, ui
 	  this->standby(); //Entry standby mode
 }
 
-void SX1278_Base::reset() {
-	this->HAL_SetNSS(true);
-	this->HAL_SetReset(false);
-	this->HAL_Delay(1);
-	this->HAL_SetReset(true);
-	this->HAL_Delay(100);
-}
-
 void SX1278_Base::standby(void) {
 	this->SPIWrite(LR_RegOpMode, 0x09);
 	this->status = STANDBY;
@@ -143,7 +135,7 @@ bool SX1278_Base::LoRaEntryRx(uint8_t length, uint32_t timeout) {
 			  return true;
 		  }
 		  if (--timeout == 0){
-			  this->reset();
+			  this->HAL_Reset();
 			  this->defaultConfig();
 			  return false;
 		  }
@@ -196,7 +188,7 @@ bool SX1278_Base::LoRaEntryTx(uint8_t length, uint32_t timeout) {
 		  }
 
 		  if (--timeout == 0) {
-			  this->reset();
+			  this->HAL_Reset();
 			  this->defaultConfig();
 			  return false;
 		  }
@@ -215,7 +207,7 @@ bool SX1278_Base::LoRaTxPacket(uint8_t* txBuffer, uint8_t length, uint32_t timeo
 	    }
 
 	    if (--timeout == 0){
-	    	this->reset();
+	    	this->HAL_Reset();
 	    	this->defaultConfig();
 	    	return false;
 	    }
@@ -224,6 +216,7 @@ bool SX1278_Base::LoRaTxPacket(uint8_t* txBuffer, uint8_t length, uint32_t timeo
 }
 
 void SX1278_Base::begin(uint8_t frequency, uint8_t power, uint8_t LoRa_Rate, uint8_t LoRa_BW, uint8_t paketLength) {
+	this->HAL_init();
 	this->frequency = frequency;
 	this->power = power;
 	this->LoRa_Rate = LoRa_Rate;

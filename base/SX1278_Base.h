@@ -245,8 +245,9 @@ protected:
 
 
 	//HAL Functions
+	virtual void HAL_init() = 0;
 	virtual void HAL_SetNSS(bool value) = 0;
-	virtual void HAL_SetReset(bool value) = 0;
+	virtual void HAL_Reset() = 0;
 	virtual void HAL_SPICommand(uint8_t cmd) = 0;
 	virtual uint8_t HAL_SPIReadByte() = 0;
 	virtual void HAL_Delay(uint32_t msec) = 0;
@@ -259,17 +260,14 @@ protected:
 	// Common Private Functions
 	uint8_t SPIRead(uint8_t addr);
 	void SPIWrite(uint8_t addr, uint8_t cmd);
-	void SPIBurstRead(uint8_t addr, uint8_t *rxBuf, uint8_t length);
-	void SPIBurstWrite(uint8_t addr, uint8_t *txBuf, uint8_t length);
+	virtual void SPIBurstRead(uint8_t addr, uint8_t *rxBuf, uint8_t length);
+	virtual void SPIBurstWrite(uint8_t addr, uint8_t *txBuf, uint8_t length);
 	void DIO0_InterruptHandler();
 
 
 	void config(uint8_t frequency, uint8_t power, uint8_t LoRa_Rate, uint8_t LoRa_BW);
 	void defaultConfig();
-	void reset();
 
-	void standby();
-	void sleep();
 	void entryLoRa();
 	void clearLoRaIrq();
 	bool LoRaEntryRx(uint8_t length, uint32_t timeout = SX1278_DEFAULT_TIMEOUT);
@@ -285,6 +283,9 @@ public:
 	bool receive(uint8_t length, uint32_t timeout = SX1278_DEFAULT_TIMEOUT);
 	uint8_t available();
 	uint8_t read(uint8_t *rxBuf, uint8_t length);
+
+	void standby();
+	void sleep();
 
 	uint8_t RSSI_LoRa();
 	uint8_t RSSI();

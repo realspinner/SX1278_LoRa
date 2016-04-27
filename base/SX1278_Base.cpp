@@ -116,6 +116,8 @@ void SX1278_Base::clearLoRaIrq(void) {
 bool SX1278_Base::LoRaEntryRx(uint8_t length, uint32_t timeout) {
 	  uint8_t addr;
 
+	  this->packetLength = length;
+
 	  this->defaultConfig();		//Setting base parameter
 	  this->SPIWrite(REG_LR_PADAC, 0x84);	//Normal and RX
 	  this->SPIWrite(LR_RegHopPeriod, 0xFF);	//No FHSS
@@ -170,6 +172,8 @@ bool SX1278_Base::LoRaEntryTx(uint8_t length, uint32_t timeout) {
 	  uint8_t addr;
 	  uint8_t temp;
 
+	  this->packetLength = length;
+
 	  this->defaultConfig(); //setting base parameter
 	  this->SPIWrite(REG_LR_PADAC, 0x87);	//Tx for 20dBm
 	  this->SPIWrite(LR_RegHopPeriod, 0x00); //RegHopPeriod NO FHSS
@@ -182,7 +186,7 @@ bool SX1278_Base::LoRaEntryTx(uint8_t length, uint32_t timeout) {
 
 	  while(true) {
 		  temp = this->SPIRead(LR_RegPayloadLength);
-		  if(temp == 21) {
+		  if(temp == length) {
 			  this->status = TX;
 			  return true;
 		  }
